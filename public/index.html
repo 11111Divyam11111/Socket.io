@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+  </head>
+
+  <body>
+    <h1>Chatting</h1>
+    <input type="text" placeholder="Enter your message" id="message" />
+    <button id="sendButton">Send</button>
+    <button id="Disconnect">Disconnect</button>
+    <button id="Connect">Connect</button>
+
+    <div id="sabko-message-dikhega"></div>
+    <div id="con-discon"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const send = document.getElementById("sendButton");
+      const mssg = document.getElementById("message");
+      const dikhgaya = document.getElementById("sabko-message-dikhega");
+      const discon = document.getElementById("Disconnect");
+      const con = document.getElementById("Connect");
+      const con_discon = document.getElementById("con-discon");     
+
+
+      // frontend se backend par message bheja
+      send.addEventListener("click", (e) => {
+        e.preventDefault();
+        const message = mssg.value;
+        console.log(message);
+        // send it to backend:
+        socket.emit("server-ko-bhejo", message);
+      });
+
+      discon.addEventListener("click", (e) => {
+        e.preventDefault();
+        socket.disconnect();
+      });
+      con.addEventListener("click",e=>{
+        e.preventDefault();
+        socket.connect();
+      })
+
+      // backend se wapas se message recieve kiya taki use diplay kar sake
+      socket.on("sabko-bhejo", (message) => {
+        const p = document.createElement("p");
+        p.innerText = message;
+        dikhgaya.appendChild(p);
+      });
+    </script>
+  </body>
+</html>
